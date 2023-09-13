@@ -1,4 +1,4 @@
-# streamingFlix
+# Streaming Flix
 Trabalho da disciplina de Tecnologias para Backend II - 2023
 Alunos: Guilherme José Queiroz e Maria Alice Albuquerque
 
