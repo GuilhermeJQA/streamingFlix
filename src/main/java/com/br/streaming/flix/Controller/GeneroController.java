@@ -1,7 +1,7 @@
 package com.br.streaming.flix.Controller;
 
-import com.br.streaming.flix.Entity.Usuario;
-import com.br.streaming.flix.Service.UsuarioService;
+import com.br.streaming.flix.Entity.Genero;
+import com.br.streaming.flix.Service.GeneroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,41 +10,41 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/usuarios")
-public class UsuarioController {
+@RequestMapping("/generos")
+public class GeneroController {
 
     @Autowired
-    UsuarioService service;
+    GeneroService service;
 
     @GetMapping("/listar-todos")
     @ResponseStatus(HttpStatus.OK)
-    public List<Usuario> findAll() {
+    public List<Genero> findAll() {
         return service.listaTodos();
     }
 
-    @GetMapping("/listar-por-nome/{nome}")
+    @GetMapping("/listar-por-nome/{genero}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Usuario> buscarNome(@PathVariable String nome) {
-        return service.listaPorNome(nome);
+    public List<Genero> buscarNome(@PathVariable String genero) {
+        return service.listaPorNome(genero);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Usuario> create(@RequestBody Usuario usuario) {
-        Usuario usuarioCreated = service.create(usuario);
-        return ResponseEntity.status(201).body(usuarioCreated);
+    public ResponseEntity<Genero> create(@RequestBody Genero genero) {
+        Genero generoCreated = service.create(genero);
+        return ResponseEntity.status(201).body(generoCreated);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Usuario> update(@RequestBody Usuario usuario) {
-        Usuario usuarioCreated = service.create(usuario);
-        return ResponseEntity.status(201).body(usuarioCreated);
+    public ResponseEntity<Genero> update(@RequestBody Genero genero) {
+        Genero generoCreated = service.create(genero);
+        return ResponseEntity.status(201).body(generoCreated);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Usuario> findById(@PathVariable Long id) {
+    public Optional<Genero> findById(@PathVariable Long id) {
         return service.findById(id);
     }
 

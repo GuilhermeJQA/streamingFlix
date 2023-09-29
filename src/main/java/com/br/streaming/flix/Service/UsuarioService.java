@@ -2,13 +2,11 @@ package com.br.streaming.flix.Service;
 
 import com.br.streaming.flix.Entity.Usuario;
 import com.br.streaming.flix.Repository.UsuarioRepository;
-import com.br.streaming.flix.dto.UsuarioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+import java.util.Optional;
 @Service
 public class UsuarioService {
 
@@ -24,13 +22,24 @@ public class UsuarioService {
         return repository.findByNomeContainsIgnoreCase(nome);
     }
 
-    public List<Usuario> listaPorNomeOrEmail(UsuarioDTO dto){
-        return repository.findByNomeOrEmail(dto.getNome(), dto.getEmail());
-    }
-    @Transactional
-    public void atualizaEmailUsario(String email, Long id){
-        repository.atualizaEmailUsuario(email, id);
+
+    public Usuario create(Usuario usuario) {
+        return repository.save(usuario);
     }
 
+    public Usuario update(Usuario usuario) {
+        return repository.save(usuario);
+    }
 
+    public List<Usuario> findAll() {
+        return repository.findAll();
+    }
+
+    public Optional<Usuario> findById(Long id) {
+        return repository.findById(id);
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
 }
