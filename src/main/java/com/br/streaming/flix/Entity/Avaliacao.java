@@ -18,7 +18,10 @@ public class Avaliacao implements Serializable {
     private Long id;
 
     @NotNull
-    private String nome;
+    @Column(name = "ds_avaliacao", length = 1000)
+    private String avaliacao;
+
+
 
     @ManyToOne
     @JoinColumn(name= "id_usuario")

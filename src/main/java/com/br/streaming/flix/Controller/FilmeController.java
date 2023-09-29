@@ -1,7 +1,8 @@
 package com.br.streaming.flix.Controller;
 
-import com.br.streaming.flix.Entity.Usuario;
-import com.br.streaming.flix.Service.UsuarioService;
+
+import com.br.streaming.flix.Entity.Filme;
+import com.br.streaming.flix.Service.FilmeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,41 +11,41 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/usuarios")
-public class UsuarioController {
+@RequestMapping("/filmes")
+public class FilmeController {
 
     @Autowired
-    UsuarioService service;
+    FilmeService service;
 
     @GetMapping("/listar-todos")
     @ResponseStatus(HttpStatus.OK)
-    public List<Usuario> findAll() {
+    public List<Filme> findAll() {
         return service.listaTodos();
     }
 
     @GetMapping("/listar-por-nome/{nome}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Usuario> buscarNome(@PathVariable String nome) {
+    public List<Filme> buscarNome(@PathVariable String nome) {
         return service.listaPorNome(nome);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Usuario> create(@RequestBody Usuario usuario) {
-        Usuario usuarioCreated = service.create(usuario);
-        return ResponseEntity.status(201).body(usuarioCreated);
+    public ResponseEntity<Filme> create(@RequestBody Filme filme) {
+        Filme filmeCreated = service.create(filme);
+        return ResponseEntity.status(201).body(filmeCreated);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Usuario> update(@RequestBody Usuario usuario) {
-        Usuario usuarioCreated = service.create(usuario);
-        return ResponseEntity.status(201).body(usuarioCreated);
+    public ResponseEntity<Filme> update(@RequestBody Filme filme) {
+        Filme filmeCreated = service.create(filme);
+        return ResponseEntity.status(201).body(filmeCreated);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Usuario> findById(@PathVariable Long id) {
+    public Optional<Filme> findById(@PathVariable Long id) {
         return service.findById(id);
     }
 

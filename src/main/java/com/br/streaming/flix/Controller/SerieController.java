@@ -1,7 +1,8 @@
 package com.br.streaming.flix.Controller;
 
-import com.br.streaming.flix.Entity.Usuario;
-import com.br.streaming.flix.Service.UsuarioService;
+import com.br.streaming.flix.Entity.Serie;
+import com.br.streaming.flix.Service.SerieService;
+import com.br.streaming.flix.Service.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,41 +11,40 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/usuarios")
-public class UsuarioController {
-
+@RequestMapping("/series")
+public class SerieController {
     @Autowired
-    UsuarioService service;
+    SerieService service;
 
     @GetMapping("/listar-todos")
     @ResponseStatus(HttpStatus.OK)
-    public List<Usuario> findAll() {
+    public List<Serie> findAll() {
         return service.listaTodos();
     }
 
     @GetMapping("/listar-por-nome/{nome}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Usuario> buscarNome(@PathVariable String nome) {
+    public List<Serie> buscarNome(@PathVariable String nome) {
         return service.listaPorNome(nome);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Usuario> create(@RequestBody Usuario usuario) {
-        Usuario usuarioCreated = service.create(usuario);
-        return ResponseEntity.status(201).body(usuarioCreated);
+    public ResponseEntity<Serie> create(@RequestBody Serie serie) {
+        Serie serieCreated = service.create(serie);
+        return ResponseEntity.status(201).body(serieCreated);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Usuario> update(@RequestBody Usuario usuario) {
-        Usuario usuarioCreated = service.create(usuario);
-        return ResponseEntity.status(201).body(usuarioCreated);
+    public ResponseEntity<Serie> update(@RequestBody Serie serie) {
+        Serie serieCreated = service.create(serie);
+        return ResponseEntity.status(201).body(serieCreated);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Usuario> findById(@PathVariable Long id) {
+    public Optional<Serie> findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
@@ -54,4 +54,5 @@ public class UsuarioController {
         service.delete(id);
     }
 
-}
+    }
+
