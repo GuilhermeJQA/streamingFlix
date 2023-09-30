@@ -1,7 +1,7 @@
-package com.br.streaming.flix.Controller;
+package com.br.streaming.flix.controller;
 
-import com.br.streaming.flix.Entity.Genero;
-import com.br.streaming.flix.Service.GeneroService;
+import com.br.streaming.flix.entity.Genero;
+import com.br.streaming.flix.service.GeneroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

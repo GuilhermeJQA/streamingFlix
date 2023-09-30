@@ -1,4 +1,4 @@
-package com.br.streaming.flix.Entity;
+package com.br.streaming.flix.entity;
 
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
