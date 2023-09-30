@@ -1,10 +1,9 @@
-package com.br.streaming.flix.Service;
+package com.br.streaming.flix.service;
 
-import com.br.streaming.flix.Entity.Usuario;
-import com.br.streaming.flix.Repository.UsuarioRepository;
+import com.br.streaming.flix.entity.Usuario;
+import com.br.streaming.flix.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 @Service

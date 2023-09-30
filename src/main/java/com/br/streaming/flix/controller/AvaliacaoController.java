@@ -1,12 +1,11 @@
-package com.br.streaming.flix.Controller;
+package com.br.streaming.flix.controller;
 
-import com.br.streaming.flix.Entity.Avaliacao;
-import com.br.streaming.flix.Service.AvaliacaoService;
+import com.br.streaming.flix.entity.Avaliacao;
+import com.br.streaming.flix.service.AvaliacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 

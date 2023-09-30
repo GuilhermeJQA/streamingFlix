@@ -1,7 +1,7 @@
-package com.br.streaming.flix.Service;
+package com.br.streaming.flix.service;
 
-import com.br.streaming.flix.Entity.Genero;
-import com.br.streaming.flix.Repository.GeneroRepository;
+import com.br.streaming.flix.entity.Genero;
+import com.br.streaming.flix.repository.GeneroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
