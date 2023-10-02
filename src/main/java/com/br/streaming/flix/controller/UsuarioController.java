@@ -17,13 +17,11 @@ public class UsuarioController {
     UsuarioService service;
 
     @GetMapping("/listar-todos")
-    @ResponseStatus(HttpStatus.OK)
     public List<Usuario> findAll() {
         return service.listaTodos();
     }
 
     @GetMapping("/listar-por-nome/{nome}")
-    @ResponseStatus(HttpStatus.OK)
     public List<Usuario> buscarNome(@PathVariable String nome) {
         return service.listaPorNome(nome);
     }
