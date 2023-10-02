@@ -1,5 +1,6 @@
 package com.br.streaming.flix.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class FilmeDTO {
+public class GeneroDTO {
 
-    private String nome;
-    private String sinopse;
+    private String genero;
 }
