@@ -22,16 +22,15 @@ public class SwaggerConfig implements WebMvcConfigurer {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()
-                .apis(RequestHandlerSelectors.basePackage("com.br.alunoonline"))
+                .apis(RequestHandlerSelectors.basePackage("com.br.streaming.flix"))
                 .paths(PathSelectors.regex("/.*"))
                 .build().apiInfo(apiInfoMetaData());
     }
 
     private ApiInfo apiInfoMetaData() {
 
-        return new ApiInfoBuilder().title("Aluno Online")
+        return new ApiInfoBuilder().title("Streaming flix")
                 .description("API Endpoint para teste")
-                .contact(new Contact("Dev-Team", "", "andrefariasti@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .version("1.0.0")
