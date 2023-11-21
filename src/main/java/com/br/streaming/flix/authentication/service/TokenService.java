@@ -61,7 +61,7 @@ public class TokenService {
     private String getAccessToken(String username, List<String> roles, Date now, Date validity) {
         String issuerUrl = ServletUriComponentsBuilder
                 .fromCurrentContextPath().build().toUriString()
-                + "/alunoOnline";
+                + "/streamingflix";
         return JWT.create()
                 .withClaim("listaPerfeil", roles)
                 .withIssuedAt(now)
