@@ -33,7 +33,7 @@ public class SecurityConfigV2 {
                 .authorizeRequests()
                 .antMatchers("/filmes/**").hasRole("USER")
                 .antMatchers("/usuarios/**").hasRole("ADMIN")
-                .antMatchers("/auth/login").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
              //   .and()
