@@ -28,6 +28,7 @@ public class UserModelController {
 
     @Autowired
     TokenService tokenService;
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/criar-usuario", method = RequestMethod.POST)
     public ResponseEntity<UserDTO>  criarUsuario (@RequestBody UserDTO user) {
 
