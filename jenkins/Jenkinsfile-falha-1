@@ -1,15 +1,15 @@
-// PIPELINE COM FALHA 1 - Versao do Java Incorreta
+// PIPELINE COM FALHA 1 - Erro de Compilacao (codigo invalido)
 // Status esperado: FAILURE no stage 'Compilacao'
 //
-// Falha: Usa JDK 11, mas o pom.xml exige Java 17.
-// Erro: "Fatal error compiling: error: release version 17 not supported"
-// Correcao: Trocar jdk 'JDK11' por jdk 'JDK17' no bloco tools.
+// Falha: Injeta um arquivo .java com erro de sintaxe proposital.
+// Erro: "java: ';' expected" - o compilador nao consegue processar o codigo.
+// Correcao: Corrigir o erro de sintaxe no codigo-fonte antes do push.
 
 pipeline {
     agent any
 
     tools {
-        jdk 'JDK11'    // ERRO INTENCIONAL: projeto requer JDK 17
+        jdk 'JDK17'
         maven 'Maven3'
     }
 
@@ -28,6 +28,30 @@ pipeline {
         stage('Validacao do Ambiente') {
             steps {
                 sh 'java -version'
+                sh 'mvn --version'
+            }
+        }
+
+        stage('Injetar Codigo com Erro') {
+            steps {
+                sh '''
+                    mkdir -p src/main/java/com/br/streaming/flix/service
+                    cat > src/main/java/com/br/streaming/flix/service/BrokenService.java << 'JAVAEOF'
+package com.br.streaming.flix.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class BrokenService {
+
+    // ERRO INTENCIONAL: falta ponto e virgula e tipo de retorno invalido
+    public String getMessage() {
+        String msg = "Hello"
+        return msg;
+    }
+}
+JAVAEOF
+                '''
             }
         }
 
@@ -45,11 +69,14 @@ pipeline {
     }
 
     post {
+        always {
+            sh 'rm -f src/main/java/com/br/streaming/flix/service/BrokenService.java'
+        }
         failure {
             echo '''
-            DIAGNOSTICO: O JDK 11 nao suporta compilacao com target 17.
-            O pom.xml define <java.version>17</java.version>.
-            SOLUCAO: Alterar para jdk 'JDK17' no bloco tools.
+            DIAGNOSTICO: Erro de compilacao - falta ponto e virgula no BrokenService.java.
+            O compilador Java exige que toda instrucao termine com ";".
+            SOLUCAO: Corrigir o codigo-fonte e rodar 'mvn compile' localmente antes do push.
             '''
         }
     }
