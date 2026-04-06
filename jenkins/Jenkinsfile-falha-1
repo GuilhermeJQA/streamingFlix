@@ -1,7 +1,7 @@
 // PIPELINE COM FALHA 1 - Erro de Compilacao (codigo invalido)
 // Status esperado: FAILURE no stage 'Compilacao'
 //
-// Falha: O arquivo BrokenService.java possui erro de sintaxe (falta ";").
+// Falha: Copia BrokenService.java (com erro de sintaxe) para src/ antes de compilar.
 // Erro: "java: ';' expected"
 // Correcao: Corrigir o erro de sintaxe no codigo-fonte antes do push.
 
@@ -29,6 +29,12 @@ pipeline {
             steps {
                 sh 'java -version'
                 sh 'mvn --version'
+            }
+        }
+
+        stage('Injetar Codigo com Erro') {
+            steps {
+                sh 'cp jenkins/broken-files/BrokenService.java src/main/java/com/br/streaming/flix/service/BrokenService.java'
             }
         }
 

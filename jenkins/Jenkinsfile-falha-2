@@ -1,7 +1,7 @@
 // PIPELINE COM FALHA 2 - Teste Unitario Falhando
 // Status esperado: FAILURE no stage 'Testes'
 //
-// Falha: Um teste injetado possui assertEquals(1, 2) que sempre falha.
+// Falha: Copia StreamingFlixFailTest.java (com assertEquals(1,2)) para src/test/.
 // Erro: "AssertionFailedError: expected: <1> but was: <2>"
 // Correcao: Verificar relatorio em target/surefire-reports/ e corrigir o teste.
 
@@ -32,39 +32,15 @@ pipeline {
             }
         }
 
-        stage('Criar Teste com Falha') {
-            steps {
-                sh '''
-                    mkdir -p src/test/java/com/br/streaming/flix
-                    cat > src/test/java/com/br/streaming/flix/StreamingFlixFailTest.java << 'JAVAEOF'
-package com.br.streaming.flix;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-class StreamingFlixFailTest {
-
-    @Test
-    @DisplayName("Teste que sempre falha - comparacao incorreta")
-    void deveCompararValoresIguais() {
-        assertEquals(1, 2, "Valores deveriam ser iguais, mas 1 != 2");
-    }
-
-    @Test
-    @DisplayName("Teste que passa - apenas para contraste")
-    void devePassarSemProblemas() {
-        assertEquals(4, 2 + 2);
-    }
-}
-JAVAEOF
-                '''
-            }
-        }
-
         stage('Compilacao') {
             steps {
                 sh 'mvn clean compile -DskipTests'
+            }
+        }
+
+        stage('Injetar Teste com Falha') {
+            steps {
+                sh 'cp jenkins/broken-files/StreamingFlixFailTest.java src/test/java/com/br/streaming/flix/StreamingFlixFailTest.java'
             }
         }
 
@@ -82,9 +58,6 @@ JAVAEOF
     }
 
     post {
-        always {
-            sh 'rm -f src/test/java/com/br/streaming/flix/StreamingFlixFailTest.java'
-        }
         failure {
             echo '''
             DIAGNOSTICO: O teste "deveCompararValoresIguais" falhou (expected 1, got 2).
