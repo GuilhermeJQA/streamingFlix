@@ -1,0 +1,65 @@
+// PIPELINE FUNCIONAL 1 - Build & Test Completo
+// Status esperado: SUCCESS
+
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK17'
+        maven 'Maven3'
+    }
+
+    environment {
+        JAVA_TOOL_OPTIONS = '-Dfile.encoding=UTF-8'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Validacao do Ambiente') {
+            steps {
+                sh 'java -version'
+                sh 'mvn --version'
+            }
+        }
+
+        stage('Compilacao') {
+            steps {
+                sh 'mvn clean compile -DskipTests'
+            }
+        }
+
+        stage('Testes') {
+            steps {
+                sh 'mvn test -Dspring.profiles.active=test'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true,
+                         testResults: 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'mvn package -DskipTests'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+                }
+            }
+        }
+    }
+
+    post {
+        success { echo 'Pipeline concluido com SUCESSO!' }
+        failure { echo 'Pipeline FALHOU. Verifique os logs acima.' }
+    }
+}

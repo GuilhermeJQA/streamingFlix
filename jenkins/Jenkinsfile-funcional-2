@@ -1,0 +1,83 @@
+// PIPELINE FUNCIONAL 2 - Build com Validacoes e Stage Condicional
+// Status esperado: SUCCESS
+
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK17'
+        maven 'Maven3'
+    }
+
+    environment {
+        JAVA_TOOL_OPTIONS = '-Dfile.encoding=UTF-8'
+        APP_NAME          = 'streamingflix'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Validacao do Ambiente') {
+            parallel {
+                stage('Java') {
+                    steps { sh 'java -version' }
+                }
+                stage('Maven') {
+                    steps { sh 'mvn --version' }
+                }
+            }
+        }
+
+        stage('Validacao de Arquivos Criticos') {
+            steps {
+                sh '''
+                    test -f pom.xml && echo "[OK] pom.xml" || (echo "[ERRO] pom.xml nao encontrado!" && exit 1)
+                    test -f src/main/resources/application.properties && echo "[OK] application.properties" || (echo "[ERRO] application.properties nao encontrado!" && exit 1)
+                    test -f src/main/java/com/br/streaming/flix/FlixApplication.java && echo "[OK] FlixApplication.java" || (echo "[ERRO] FlixApplication.java nao encontrado!" && exit 1)
+                '''
+            }
+        }
+
+        stage('Compilacao') {
+            steps {
+                sh 'mvn clean compile -DskipTests'
+            }
+        }
+
+        stage('Testes') {
+            steps {
+                sh 'mvn test -Dspring.profiles.active=test'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true,
+                         testResults: 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Package') {
+            when {
+                branch 'master'
+            }
+            steps {
+                sh 'mvn package -DskipTests'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+                }
+            }
+        }
+    }
+
+    post {
+        success { echo "Pipeline do ${APP_NAME} concluido com SUCESSO!" }
+        failure { echo "Pipeline do ${APP_NAME} FALHOU. Verifique os logs." }
+    }
+}

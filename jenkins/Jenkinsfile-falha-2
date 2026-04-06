@@ -1,0 +1,96 @@
+// PIPELINE COM FALHA 2 - Teste Unitario Falhando
+// Status esperado: FAILURE no stage 'Testes'
+//
+// Falha: Um teste injetado possui assertEquals(1, 2) que sempre falha.
+// Erro: "AssertionFailedError: expected: <1> but was: <2>"
+// Correcao: Verificar relatorio em target/surefire-reports/ e corrigir o teste.
+
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK17'
+        maven 'Maven3'
+    }
+
+    environment {
+        JAVA_TOOL_OPTIONS = '-Dfile.encoding=UTF-8'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Validacao do Ambiente') {
+            steps {
+                sh 'java -version'
+                sh 'mvn --version'
+            }
+        }
+
+        stage('Criar Teste com Falha') {
+            steps {
+                sh '''
+                    mkdir -p src/test/java/com/br/streaming/flix
+                    cat > src/test/java/com/br/streaming/flix/StreamingFlixFailTest.java << 'JAVAEOF'
+package com.br.streaming.flix;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class StreamingFlixFailTest {
+
+    @Test
+    @DisplayName("Teste que sempre falha - comparacao incorreta")
+    void deveCompararValoresIguais() {
+        assertEquals(1, 2, "Valores deveriam ser iguais, mas 1 != 2");
+    }
+
+    @Test
+    @DisplayName("Teste que passa - apenas para contraste")
+    void devePassarSemProblemas() {
+        assertEquals(4, 2 + 2);
+    }
+}
+JAVAEOF
+                '''
+            }
+        }
+
+        stage('Compilacao') {
+            steps {
+                sh 'mvn clean compile -DskipTests'
+            }
+        }
+
+        stage('Testes') {
+            steps {
+                sh 'mvn test -Dspring.profiles.active=test'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true,
+                         testResults: 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'rm -f src/test/java/com/br/streaming/flix/StreamingFlixFailTest.java'
+        }
+        failure {
+            echo '''
+            DIAGNOSTICO: O teste "deveCompararValoresIguais" falhou (expected 1, got 2).
+            INVESTIGAR: Relatorio JUnit no Jenkins ou target/surefire-reports/
+            SOLUCAO: Corrigir a logica do teste e rodar 'mvn test' localmente antes do push.
+            '''
+        }
+    }
+}

@@ -1,0 +1,56 @@
+// PIPELINE COM FALHA 1 - Versao do Java Incorreta
+// Status esperado: FAILURE no stage 'Compilacao'
+//
+// Falha: Usa JDK 11, mas o pom.xml exige Java 17.
+// Erro: "Fatal error compiling: error: release version 17 not supported"
+// Correcao: Trocar jdk 'JDK11' por jdk 'JDK17' no bloco tools.
+
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK11'    // ERRO INTENCIONAL: projeto requer JDK 17
+        maven 'Maven3'
+    }
+
+    environment {
+        JAVA_TOOL_OPTIONS = '-Dfile.encoding=UTF-8'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Validacao do Ambiente') {
+            steps {
+                sh 'java -version'
+            }
+        }
+
+        stage('Compilacao') {
+            steps {
+                sh 'mvn clean compile -DskipTests'
+            }
+        }
+
+        stage('Testes') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo '''
+            DIAGNOSTICO: O JDK 11 nao suporta compilacao com target 17.
+            O pom.xml define <java.version>17</java.version>.
+            SOLUCAO: Alterar para jdk 'JDK17' no bloco tools.
+            '''
+        }
+    }
+}
