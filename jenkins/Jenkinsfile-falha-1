@@ -1,8 +1,8 @@
 // PIPELINE COM FALHA 1 - Erro de Compilacao (codigo invalido)
 // Status esperado: FAILURE no stage 'Compilacao'
 //
-// Falha: Injeta um arquivo .java com erro de sintaxe proposital.
-// Erro: "java: ';' expected" - o compilador nao consegue processar o codigo.
+// Falha: O arquivo BrokenService.java possui erro de sintaxe (falta ";").
+// Erro: "java: ';' expected"
 // Correcao: Corrigir o erro de sintaxe no codigo-fonte antes do push.
 
 pipeline {
@@ -32,29 +32,6 @@ pipeline {
             }
         }
 
-        stage('Injetar Codigo com Erro') {
-            steps {
-                sh '''
-                    mkdir -p src/main/java/com/br/streaming/flix/service
-                    cat > src/main/java/com/br/streaming/flix/service/BrokenService.java << 'JAVAEOF'
-package com.br.streaming.flix.service;
-
-import org.springframework.stereotype.Service;
-
-@Service
-public class BrokenService {
-
-    // ERRO INTENCIONAL: falta ponto e virgula e tipo de retorno invalido
-    public String getMessage() {
-        String msg = "Hello"
-        return msg;
-    }
-}
-JAVAEOF
-                '''
-            }
-        }
-
         stage('Compilacao') {
             steps {
                 sh 'mvn clean compile -DskipTests'
@@ -63,20 +40,17 @@ JAVAEOF
 
         stage('Testes') {
             steps {
-                sh 'mvn test'
+                sh 'mvn test -Dspring.profiles.active=test'
             }
         }
     }
 
     post {
-        always {
-            sh 'rm -f src/main/java/com/br/streaming/flix/service/BrokenService.java'
-        }
         failure {
             echo '''
-            DIAGNOSTICO: Erro de compilacao - falta ponto e virgula no BrokenService.java.
+            DIAGNOSTICO: Erro de compilacao no BrokenService.java - falta ponto e virgula.
             O compilador Java exige que toda instrucao termine com ";".
-            SOLUCAO: Corrigir o codigo-fonte e rodar 'mvn compile' localmente antes do push.
+            SOLUCAO: Corrigir o codigo e rodar 'mvn compile' localmente antes do push.
             '''
         }
     }
